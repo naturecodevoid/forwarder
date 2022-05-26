@@ -22,6 +22,17 @@ export default async function all(req: NextApiRequest, res: NextApiResponse) {
         redirect: "manual",
     });
 
+    const contentLength = fetched.headers.get("content-length");
+
+    // API routes shouldn't send responses with a content-length of over 4MD
+    if (contentLength)
+        if (Number.parseInt(contentLength) >= 4000000) {
+            res.status(302);
+            res.setHeader("location", forwardTo + path);
+            res.end();
+            return;
+        }
+
     res.status(fetched.status);
     for (const header of fetched.headers) {
         res.setHeader(header[0], header[1]);
