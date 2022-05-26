@@ -24,7 +24,7 @@ export default async function all(req: NextApiRequest, res: NextApiResponse) {
 
     const contentLength = fetched.headers.get("content-length");
 
-    // API routes shouldn't send responses with a content-length of over 4MD
+    // API routes shouldn't send responses with a content-length of over 4MB
     if (contentLength)
         if (Number.parseInt(contentLength) >= 4000000) {
             res.status(302);
