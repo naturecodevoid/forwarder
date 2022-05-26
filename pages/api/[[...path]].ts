@@ -4,6 +4,8 @@ import type { NextApiRequest, NextApiResponse } from "next";
 export default async function all(req: NextApiRequest, res: NextApiResponse) {
     const { body, headers, method } = req;
 
+    delete headers["host"];
+
     let { path } = req.query;
     path = path ?? "";
     if (Array.isArray(path)) {
@@ -12,8 +14,6 @@ export default async function all(req: NextApiRequest, res: NextApiResponse) {
 
     let forwardTo = process.env.FORWARD_TO;
     if (!forwardTo.endsWith("/")) forwardTo += "/";
-
-    delete headers["host"];
 
     const fetched = await fetch(forwardTo + path, {
         body: method !== "GET" && method !== "HEAD" ? body : null,
